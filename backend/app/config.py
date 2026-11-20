@@ -32,7 +32,11 @@ class Settings:
     def __init__(self) -> None:
         self.app_name = "SentinelAI"
         self.env = (os.getenv("APP_ENV") or "development").lower()
-        self.database_url = normalize_database_url(os.getenv("DATABASE_URL") or "sqlite:///./sentinel.db")
+        self.on_vercel = bool(os.getenv("VERCEL"))
+        # Vercel functions have a read-only filesystem except /tmp. Without DATABASE_URL the demo runs on an
+        # ephemeral SQLite file there (re-seeded on each cold start); set DATABASE_URL (Postgres) to keep data.
+        default_db = "sqlite:////tmp/sentinel.db" if self.on_vercel else "sqlite:///./sentinel.db"
+        self.database_url = normalize_database_url(os.getenv("DATABASE_URL") or default_db)
         self.jwt_secret = os.getenv("JWT_SECRET") or DEFAULT_DEV_SECRET
         self.jwt_algorithm = "HS256"
         self.jwt_expire_minutes = int(os.getenv("JWT_EXPIRE_MINUTES") or "480")

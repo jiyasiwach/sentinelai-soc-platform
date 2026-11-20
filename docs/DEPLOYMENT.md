@@ -187,36 +187,52 @@ run several replicas, also rate-limit `POST /api/auth/login` at the proxy or mov
 store such as Redis. Because the per-IP limit uses the client address, keep `--proxy-headers` behind a
 trusted proxy only (as configured), otherwise every user would share the proxy's IP.
 
-## Option 4: Vercel (frontend) + another host (backend)
+## Option 4: Vercel (whole app: UI + API)
 
-Vercel can host the static React build, but **not this backend**: SentinelAI is a long-running FastAPI
-process with a persistent database connection, start-up seeding, 20 MB uploads and LLM calls that may take
-up to `AI_TIMEOUT_SECONDS` (90 s). Run the backend on Render, Railway, Fly.io or a VPS (any option in this
-document), then put the UI on Vercel and proxy `/api` to it.
+The repository includes everything Vercel needs to run both halves from one project:
 
-1. Deploy the backend first and note its URL, e.g. `https://sentinel-api.onrender.com`. Check
-   `https://sentinel-api.onrender.com/api/health`.
-2. In Vercel: **Add New Project** -> import the repository -> **Root Directory** `frontend`, framework
-   preset **Vite**, build command `npm run build`, output directory `dist`.
-3. Add `frontend/vercel.json` (not included in the repository) so that `/api/*` is rewritten to the backend
-   and every other path falls back to the SPA:
+| File | Purpose |
+|---|---|
+| `vercel.json` | Builds the React UI (`frontend/dist`), routes `/api/*` to the Python function, falls back to `index.html` for UI routes |
+| `api/index.py` | Vercel Python function that exposes the FastAPI app and prepares the database on each cold start |
+| `requirements.txt` (repo root) | Python packages for the function (keep in step with `backend/requirements.txt`) |
 
-   ```json
-   {
-     "rewrites": [
-       { "source": "/api/:path*", "destination": "https://sentinel-api.onrender.com/api/:path*" },
-       { "source": "/(.*)", "destination": "/index.html" }
-     ]
-   }
-   ```
+Steps:
 
-4. Deploy. The browser only talks to the Vercel domain, so requests are same-origin and the backend needs
-   no CORS settings (it disables CORS in production anyway). The UI calls relative `/api/...` paths, so
-   no build-time API URL is needed.
+1. Vercel -> **Add New Project** -> import `sentinelai-soc-platform`.
+2. **Root Directory must be the repository root** (leave it empty / `./`). If it is set to `frontend`,
+   Vercel ignores `vercel.json` and `api/`, and you get the UI with no backend (every `/api` call fails,
+   so you cannot log in). Framework preset: **Other** (the build settings come from `vercel.json`).
+3. Environment variables (Settings -> Environment Variables), then redeploy:
+   - `APP_ENV=production` and `JWT_SECRET=<48+ random characters>` (the app refuses to start in production
+     with a weak secret).
+   - `ADMIN_PASSWORD`, `ANALYST_PASSWORD`, `VIEWER_PASSWORD` if the site is shared.
+   - `DATABASE_URL` for a **Postgres** database (e.g. Neon from the Vercel Marketplace) to keep data.
+     Without it the app uses SQLite in `/tmp`, which works for a demo but is **reset on every cold start**
+     and is not shared between function instances.
+   - Optional: `AI_PROVIDER` and the matching API key.
+4. Deploy and check `https://<your-app>.vercel.app/api/health`, then log in.
 
-Caveats: Vercel's proxy applies its own request-size and timeout limits to rewritten requests, which can be
-lower than the backend's (large alert uploads, slow LLM investigations). Check Vercel's current limits; if
-they get in the way, serve everything from the backend host instead, which already serves the UI.
+Limits on Vercel: each API request must finish within the function's `maxDuration` (60 s in
+`vercel.json`; raise `AI_TIMEOUT_SECONDS` only within your plan's limit), request bodies are limited to
+about 4.5 MB (large alert uploads need the Docker deployment), and the login throttle counts per function
+instance. For heavy use, run the Docker image on Render, Railway, Fly.io or a VPS instead.
+
+### Option 4b: UI on Vercel, API elsewhere
+
+If the backend already runs on another host (e.g. Render), set the Vercel project's Root Directory to
+`frontend` and add `frontend/vercel.json` that forwards `/api` to it:
+
+```json
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://sentinel-api.onrender.com/api/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+The browser only talks to the Vercel domain, so requests stay same-origin and no CORS settings are needed.
 
 ## Option 5: Fly.io
 
