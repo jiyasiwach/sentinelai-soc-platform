@@ -1,0 +1,43 @@
+{
+  "assets": [
+    {"hostname": "web-01", "ip": "10.10.10.5", "os": "Ubuntu 20.04 LTS", "criticality": "critical", "owner": "Web Platform Team",
+     "open_ports": [{"port": 22, "protocol": "tcp", "service": "ssh", "product": "OpenSSH 8.2p1"}, {"port": 443, "protocol": "tcp", "service": "https", "product": "nginx 1.18"}, {"port": 8080, "protocol": "tcp", "service": "http-proxy", "product": "Apache Tomcat 9.0.50"}]},
+    {"hostname": "fs-01", "ip": "10.10.30.10", "os": "Windows Server 2008 R2", "criticality": "high", "owner": "IT Infrastructure",
+     "open_ports": [{"port": 139, "protocol": "tcp", "service": "netbios-ssn", "product": ""}, {"port": 445, "protocol": "tcp", "service": "microsoft-ds", "product": "Windows SMBv1"}, {"port": 3389, "protocol": "tcp", "service": "ms-wbt-server", "product": ""}]},
+    {"hostname": "dc-01", "ip": "10.10.1.10", "os": "Windows Server 2019", "criticality": "critical", "owner": "Identity Team",
+     "open_ports": [{"port": 53, "protocol": "tcp", "service": "domain", "product": ""}, {"port": 88, "protocol": "tcp", "service": "kerberos-sec", "product": ""}, {"port": 389, "protocol": "tcp", "service": "ldap", "product": ""}, {"port": 445, "protocol": "tcp", "service": "microsoft-ds", "product": ""}]},
+    {"hostname": "finance-ws-07", "ip": "10.10.20.57", "os": "Windows 10 22H2", "criticality": "medium", "owner": "Finance",
+     "open_ports": [{"port": 135, "protocol": "tcp", "service": "msrpc", "product": ""}, {"port": 445, "protocol": "tcp", "service": "microsoft-ds", "product": ""}]},
+    {"hostname": "hr-ws-03", "ip": "10.10.20.83", "os": "Windows 10 21H2", "criticality": "medium", "owner": "Human Resources",
+     "open_ports": [{"port": 3389, "protocol": "tcp", "service": "ms-wbt-server", "product": ""}]}
+  ],
+  "findings": [
+    {"host": "web-01", "title": "Apache Log4j2 JNDI remote code execution (Log4Shell)", "cve": "CVE-2021-44228", "cvss": 10.0, "port": 8080, "service": "http-proxy", "exploit_available": true, "source": "nessus",
+     "description": "The Tomcat application bundles log4j-core 2.14.1. Attacker-controlled strings such as ${jndi:ldap://...} in logged headers lead to remote code execution.",
+     "remediation": "Upgrade log4j-core to 2.17.1 or later; as a stop-gap remove JndiLookup.class and block outbound LDAP/RMI from the host."},
+    {"host": "web-01", "title": "OpenSSH ssh-agent remote code execution via PKCS#11 providers", "cve": "CVE-2023-38408", "cvss": 9.8, "port": 22, "service": "ssh", "exploit_available": false, "source": "openvas",
+     "description": "OpenSSH before 9.3p2 ssh-agent can load attacker-controlled PKCS#11 libraries when agent forwarding is used.",
+     "remediation": "Upgrade OpenSSH to 9.3p2 or later and avoid agent forwarding to untrusted hosts."},
+    {"host": "web-01", "title": "SSH password authentication enabled", "cve": "", "cvss": 5.3, "port": 22, "service": "ssh", "exploit_available": false, "source": "pentest",
+     "description": "Pentest confirmed the SSH daemon accepts password logins for local accounts, enabling online brute force.",
+     "remediation": "Set PasswordAuthentication no, use key-based auth with MFA, and deploy fail2ban."},
+    {"host": "fs-01", "title": "Microsoft SMBv1 remote code execution (MS17-010 / EternalBlue)", "cve": "CVE-2017-0144", "cvss": 8.1, "port": 445, "service": "microsoft-ds", "exploit_available": true, "source": "nessus",
+     "description": "The host is missing MS17-010 and exposes SMBv1, which is exploitable by EternalBlue for unauthenticated remote code execution.",
+     "remediation": "Apply MS17-010, disable SMBv1 and restrict 445/tcp to required hosts."},
+    {"host": "fs-01", "title": "Unsupported operating system (Windows Server 2008 R2 end of life)", "cve": "", "cvss": 10.0, "port": null, "service": "", "exploit_available": false, "source": "nessus",
+     "description": "Windows Server 2008 R2 reached end of extended support and no longer receives security updates.",
+     "remediation": "Migrate file shares to a supported Windows Server release."},
+    {"host": "dc-01", "title": "Windows Print Spooler remote code execution (PrintNightmare)", "cve": "CVE-2021-34527", "cvss": 8.8, "port": 445, "service": "microsoft-ds", "exploit_available": true, "source": "pentest",
+     "description": "Print Spooler is running on the domain controller and is vulnerable to PrintNightmare, allowing SYSTEM code execution.",
+     "remediation": "Apply the July 2021 updates and disable the Print Spooler service on domain controllers."},
+    {"host": "finance-ws-07", "title": "Google Chrome WebP heap buffer overflow", "cve": "CVE-2023-4863", "cvss": 8.8, "port": null, "service": "chrome", "exploit_available": true, "source": "openvas",
+     "description": "Chrome 116 is installed; a crafted WebP image can cause heap corruption leading to code execution (exploited in the wild).",
+     "remediation": "Update Chrome to 116.0.5845.187 or later and enforce auto-update."},
+    {"host": "finance-ws-07", "title": "Windows PowerShell 2.0 engine enabled", "cve": "", "cvss": 5.3, "port": null, "service": "", "exploit_available": false, "source": "manual",
+     "description": "PowerShell v2 lacks script block logging and AMSI, enabling downgrade attacks that evade detection.",
+     "remediation": "Disable the MicrosoftWindowsPowerShellV2 optional feature."},
+    {"host": "hr-ws-03", "title": "RDP without Network Level Authentication", "cve": "", "cvss": 6.5, "port": 3389, "service": "ms-wbt-server", "exploit_available": false, "source": "pentest",
+     "description": "Remote Desktop accepts connections without NLA, exposing the logon screen to unauthenticated users and brute force.",
+     "remediation": "Require NLA, restrict RDP to the VPN/jump host and enable account lockout."}
+  ]
+}

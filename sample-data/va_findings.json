@@ -1,0 +1,14 @@
+{
+  "findings": [
+    {"host": "legacy-ftp-01", "ip": "10.10.60.11", "title": "vsftpd 2.3.4 backdoor command execution", "cve": "CVE-2011-2523", "cvss": 9.8, "port": 21, "service": "ftp", "exploit_available": true, "source": "openvas",
+     "description": "vsftpd 2.3.4 contains a backdoor that opens a shell on port 6200 when a username ending in ':)' is sent.", "remediation": "Remove vsftpd 2.3.4, install a current release from a trusted source, disable FTP if unused."},
+    {"host": "web-01", "title": "Apache Tomcat manager exposed with default credentials", "cve": "", "cvss": 9.8, "port": 8080, "service": "http-proxy", "exploit_available": true, "source": "pentest",
+     "description": "Manual pentest logged in to /manager/html with tomcat:tomcat and could deploy a WAR file.", "remediation": "Remove the manager app or restrict it to localhost; set strong unique credentials."},
+    {"host": "cache-01", "ip": "10.10.60.20", "title": "Redis server without authentication", "cve": "", "cvss": 9.8, "port": 6379, "service": "redis", "exploit_available": true, "source": "nessus",
+     "description": "Redis accepts unauthenticated commands; CONFIG SET can be abused to write files.", "remediation": "Enable requirepass/ACLs, bind to 127.0.0.1 and enable protected-mode."},
+    {"host": "dc-01", "title": "SMB signing not required", "cve": "", "cvss": 5.3, "port": 445, "service": "microsoft-ds", "exploit_available": false, "source": "nessus",
+     "description": "SMB signing is not enforced, allowing NTLM relay attacks.", "remediation": "Enforce 'Microsoft network server: Digitally sign communications (always)' via GPO."},
+    {"host": "finance-ws-07", "title": "Microsoft Office macro execution allowed from the internet", "cve": "", "cvss": 7.8, "port": null, "service": "office", "exploit_available": true, "source": "manual",
+     "description": "Group policy does not block macros in files with Mark-of-the-Web.", "remediation": "Enable 'Block macros from running in Office files from the Internet'."}
+  ]
+}

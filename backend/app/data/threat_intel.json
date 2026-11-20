@@ -1,0 +1,35 @@
+{
+  "_comment": "Local demo threat-intel feed. Documentation-range IPs (RFC 5737), .example domains and well-known test hashes only.",
+  "ips": {
+    "203.0.113.45": {"reputation": "malicious", "score": 95, "tags": ["c2", "cobalt-strike"], "country": "NL", "asn": "AS64500 Example-Hosting", "malware_family": "Cobalt Strike", "description": "Known Cobalt Strike team server"},
+    "198.51.100.77": {"reputation": "malicious", "score": 88, "tags": ["ssh-bruteforce", "scanner"], "country": "RU", "asn": "AS64501 Example-VPS", "malware_family": "", "description": "Mass SSH brute-force source"},
+    "192.0.2.66": {"reputation": "malicious", "score": 90, "tags": ["exploit-scanner", "log4shell"], "country": "CN", "asn": "AS64502 Example-Cloud", "malware_family": "", "description": "Log4Shell / SQLi exploitation source"},
+    "198.51.100.200": {"reputation": "suspicious", "score": 60, "tags": ["tor-exit-node"], "country": "DE", "asn": "AS64503 Example-Tor", "malware_family": "", "description": "Tor exit node"},
+    "198.51.100.23": {"reputation": "suspicious", "score": 55, "tags": ["bulk-mailer"], "country": "US", "asn": "AS64504 Example-Mail", "malware_family": "", "description": "Mail relay seen in phishing campaigns"},
+    "203.0.113.99": {"reputation": "suspicious", "score": 50, "tags": ["ransomware-infra"], "country": "RO", "asn": "AS64505 Example-Net", "malware_family": "LockBit", "description": "Associated with ransomware payload hosting"},
+    "8.8.8.8": {"reputation": "benign", "score": 0, "tags": ["public-dns", "google"], "country": "US", "asn": "AS15169 Google LLC", "malware_family": "", "description": "Google Public DNS"},
+    "1.1.1.1": {"reputation": "benign", "score": 0, "tags": ["public-dns", "cloudflare"], "country": "AU", "asn": "AS13335 Cloudflare", "malware_family": "", "description": "Cloudflare DNS"}
+  },
+  "domains": {
+    "invoice-update.example": {"reputation": "malicious", "score": 92, "tags": ["phishing", "malware-delivery"], "country": "", "asn": "", "malware_family": "", "description": "Invoice-themed phishing domain"},
+    "cdn-sync.example": {"reputation": "malicious", "score": 94, "tags": ["c2"], "country": "NL", "asn": "AS64500 Example-Hosting", "malware_family": "Cobalt Strike", "description": "C2 domain resolving to 203.0.113.45"},
+    "files-drop.example": {"reputation": "suspicious", "score": 65, "tags": ["file-sharing", "exfil"], "country": "", "asn": "", "malware_family": "", "description": "Anonymous file drop service"},
+    "pay-decrypt.example": {"reputation": "malicious", "score": 97, "tags": ["ransomware", "ransom-portal"], "country": "", "asn": "", "malware_family": "LockBit", "description": "Ransom negotiation portal"},
+    "microsoft.com": {"reputation": "benign", "score": 0, "tags": ["vendor"], "country": "US", "asn": "", "malware_family": "", "description": "Microsoft"},
+    "eicar.com": {"reputation": "benign", "score": 0, "tags": ["eicar-test-file"], "country": "", "asn": "", "malware_family": "", "description": "EICAR test file name (eicar.com) - harmless"},
+    "eicar.org": {"reputation": "benign", "score": 0, "tags": ["test-file"], "country": "DE", "asn": "", "malware_family": "", "description": "EICAR test file provider"}
+  },
+  "urls": {
+    "http://invoice-update.example/inv_2026.zip": {"reputation": "malicious", "score": 95, "tags": ["phishing", "payload"], "country": "", "asn": "", "malware_family": "", "description": "Phishing payload URL"}
+  },
+  "emails": {
+    "billing@invoice-update.example": {"reputation": "malicious", "score": 90, "tags": ["phishing-sender"], "country": "", "asn": "", "malware_family": "", "description": "Phishing sender"}
+  },
+  "hashes": {
+    "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08": {"reputation": "malicious", "score": 93, "tags": ["dropper", "macro"], "country": "", "asn": "", "malware_family": "Emotet-like loader (test hash)", "description": "Malicious Office attachment (demo test hash)"},
+    "098f6bcd4621d373cade4e832627b4f6": {"reputation": "malicious", "score": 96, "tags": ["credential-theft", "mimikatz"], "country": "", "asn": "", "malware_family": "Mimikatz", "description": "Mimikatz binary (demo test hash)"},
+    "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824": {"reputation": "malicious", "score": 99, "tags": ["ransomware"], "country": "", "asn": "", "malware_family": "LockBit (test hash)", "description": "Ransomware encryptor (demo test hash)"},
+    "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3": {"reputation": "suspicious", "score": 60, "tags": ["webshell"], "country": "", "asn": "", "malware_family": "", "description": "Possible web shell (demo test hash)"},
+    "44d88612fea8a8f36de82e1278abb02f": {"reputation": "benign", "score": 0, "tags": ["eicar-test-file"], "country": "", "asn": "", "malware_family": "EICAR test", "description": "EICAR anti-malware test file - harmless"}
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp": "2026-11-20T09:12:44.512+0000",
+    "id": "1763629964.4410211",
+    "rule": {"level": 12, "description": "Multiple Windows logon failures - possible brute force", "id": "60204", "groups": ["windows", "authentication_failures"], "mitre": {"id": ["T1110"]}},
+    "agent": {"id": "014", "name": "dc-01", "ip": "10.10.1.10"},
+    "data": {"srcip": "198.51.100.77", "win": {"eventdata": {"targetUserName": "administrator", "logonType": "3"}}},
+    "full_log": "52 failed logon events (4625) for administrator from 198.51.100.77 within 5 minutes"
+  },
+  {
+    "timestamp": "2026-11-20T09:20:02.004+0000",
+    "id": "1763630402.4410388",
+    "rule": {"level": 13, "description": "PowerShell executed with encoded command", "id": "92057", "groups": ["windows", "powershell"]},
+    "agent": {"id": "021", "name": "finance-ws-07", "ip": "10.10.20.57"},
+    "data": {"win": {"eventdata": {"subjectUserName": "priya.sharma", "commandLine": "powershell.exe -nop -w hidden -EncodedCommand SQBFAFgA"}}},
+    "full_log": "powershell.exe -nop -w hidden -EncodedCommand SQBFAFgA (base64) spawned by WINWORD.EXE"
+  },
+  {
+    "timestamp": "2026-11-20T09:31:15.877+0000",
+    "id": "1763631075.4410551",
+    "rule": {"level": 5, "description": "Integrity checksum changed: /etc/passwd", "id": "550", "groups": ["ossec", "syscheck"]},
+    "agent": {"id": "003", "name": "web-01", "ip": "10.10.10.5"},
+    "data": {},
+    "full_log": "Integrity checksum changed for '/etc/passwd' - new account created with useradd"
+  }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "@timestamp": "2026-11-20T11:14:09.120Z",
+    "kibana.alert.uuid": "8c1d0f0e-6a7b-4c2d-9e1f-2a3b4c5d6e7f",
+    "kibana.alert.rule.name": "Volume Shadow Copy Deletion via VssAdmin",
+    "kibana.alert.severity": "critical",
+    "kibana.alert.risk_score": 99,
+    "kibana.alert.reason": "process event with process vssadmin.exe, parent process cmd.exe, by anil.kumar on hr-ws-03 created critical alert: vssadmin delete shadows /all /quiet",
+    "host": {"name": "hr-ws-03"},
+    "user": {"name": "anil.kumar"},
+    "source": {"ip": "10.10.20.83"},
+    "event": {"category": ["process"]}
+  },
+  {
+    "@timestamp": "2026-11-20T11:20:45.003Z",
+    "kibana.alert.uuid": "1f2e3d4c-5b6a-4978-8a9b-0c1d2e3f4a5b",
+    "kibana.alert.rule.name": "LSASS Memory Access by Unusual Process",
+    "kibana.alert.severity": "high",
+    "kibana.alert.reason": "rundll32.exe opened lsass.exe with PROCESS_VM_READ (comsvcs.dll MiniDump) - credential dump on fs-01",
+    "host": {"name": "fs-01"},
+    "user": {"name": "svc_backup"},
+    "source": {"ip": "10.10.30.10"},
+    "event": {"category": ["process"]}
+  }
+]

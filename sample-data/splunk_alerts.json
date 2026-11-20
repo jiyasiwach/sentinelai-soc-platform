@@ -1,0 +1,11 @@
+[
+  {
+    "search_name": "Threat - Outbound Traffic to Known C2 - Rule",
+    "sid": "scheduler__admin__SplunkEnterpriseSecuritySuite__RMD5a1b2",
+    "result": {"_time": "2026-11-20T10:02:11Z", "urgency": "critical", "dest": "hr-ws-03", "src": "10.10.20.83", "dest_ip": "203.0.113.45", "user": "anil.kumar", "category": "command and control", "description": "Beaconing every 30s to 203.0.113.45 (cdn-sync.example), Cobalt Strike malleable profile suspected"}
+  },
+  {
+    "search_name": "Access - Excessive Failed Logins - Rule",
+    "result": {"_time": "2026-11-20T10:05:40Z", "urgency": "medium", "dest": "vpn-gw-01", "src": "198.51.100.200", "user": "arjun.mehta", "description": "37 failed logins via VPN from Tor exit node 198.51.100.200"}
+  }
+]
